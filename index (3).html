@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>دعوة زفاف طارق وروان</title>
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
+<style>
+  :root{--navy:#0a1330;--navy2:#142456;--gold:#d4af37;--gold2:#f5e0a0;--ink:#f6efd9;}
+  html,body{height:100%;margin:0;overflow:hidden;background:radial-gradient(ellipse at 50% 35%,#1a2f6e 0%,#0a1330 60%,#050a1c 100%);color:var(--ink);font-family:'Cairo',sans-serif}
+  #stage{position:fixed;inset:0;touch-action:none}
+  #stage canvas{display:block}
+  .glass{background:linear-gradient(135deg,rgba(255,255,255,.13),rgba(255,255,255,.04));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(212,175,55,.35);box-shadow:0 10px 40px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.2)}
+  .names{font-family:'Amiri',serif;font-weight:700;background:linear-gradient(180deg,#fff3c4,#d4af37 55%,#a97c18);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 0 30px rgba(212,175,55,.25)}
+  .btn-gold{background:linear-gradient(135deg,#f5e0a0,#d4af37 50%,#a97c18);color:#0a1330;font-weight:700;box-shadow:0 6px 24px rgba(212,175,55,.4);transition:transform .15s}
+  .btn-gold:active{transform:scale(.96)}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:4px;background:rgba(212,175,55,.35);outline:none;direction:ltr}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--gold);border:2px solid #fff3c4;cursor:pointer}
+  input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--gold);border:2px solid #fff3c4}
+  .sw{position:relative;width:46px;height:26px;border-radius:20px;background:rgba(255,255,255,.2);cursor:pointer;transition:.2s}
+  .sw::after{content:"";position:absolute;top:3px;right:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.2s}
+  .sw.on{background:var(--gold)} .sw.on::after{right:23px}
+  #wish{transition:opacity .6s}
+  button:focus-visible,input:focus-visible,.sw:focus-visible{outline:2px solid var(--gold2);outline-offset:3px}
+  model-viewer{width:100%;height:100%;--poster-color:transparent;background:transparent}
+  @media (prefers-reduced-motion:reduce){#wish{transition:none}}
+</style>
+</head>
+<body>
+
+<div id="stage" aria-label="معاينة ثلاثية الأبعاد للخاتمين"></div>
+
+<!-- العنوان -->
+<header class="fixed top-0 inset-x-0 z-10 text-center px-4 pt-5 pointer-events-none" style="padding-top:max(1.25rem,env(safe-area-inset-top))">
+  <p class="text-sm sm:text-base font-light text-[#f5e0a0]">ويتشرف أهلنا بدعوتكم لحضور فرحة قلبنا</p>
+  <h1 class="names text-5xl sm:text-7xl leading-tight mt-1">طارق <span class="text-3xl sm:text-5xl">&amp;</span> روان</h1>
+  <div class="inline-flex items-center gap-3 glass rounded-full px-5 py-1.5 mt-2 text-sm sm:text-base">
+    <span>الثلاثاء ٢٠ أكتوبر ٢٠٢٦</span>
+    <span class="w-px h-4 bg-[#d4af37]/60"></span>
+    <span id="count" class="text-[#f5e0a0]"></span>
+  </div>
+</header>
+
+<!-- الرسالة المتغيرة -->
+<p id="wish" class="fixed z-10 inset-x-0 text-center px-8 font-['Amiri'] text-xl sm:text-2xl text-[#fff3c4] pointer-events-none" style="bottom:calc(env(safe-area-inset-bottom) + 215px)"></p>
+
+<!-- لوحة التحكم -->
+<section class="fixed z-10 inset-x-0 bottom-0 px-3 sm:px-0" style="padding-bottom:max(.75rem,env(safe-area-inset-bottom))">
+  <div class="glass rounded-3xl mx-auto max-w-xl p-4">
+    <div class="flex items-center justify-between mb-3">
+      <button id="arBtn" class="btn-gold rounded-full px-5 py-2.5 text-sm sm:text-base flex items-center gap-2">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="m3 7 9 5 9-5M12 12v10"/></svg>
+        شوفنا في أوضتك (واقع معزز)
+      </button>
+      <button id="togglePanel" class="text-[#f5e0a0] text-sm underline underline-offset-4" aria-expanded="true">إخفاء التحكم</button>
+    </div>
+    <div id="panel" class="grid grid-cols-2 gap-x-5 gap-y-3 text-sm">
+      <label class="block">سرعة الدوران <input id="speed" type="range" min="0" max="4" step=".1" value="1"></label>
+      <label class="block">حجم الخاتمين <input id="size" type="range" min=".5" max="1.6" step=".05" value="1"></label>
+      <label class="block">شدة الإضاءة <input id="light" type="range" min=".2" max="3" step=".1" value="1.2"></label>
+      <div class="flex items-center justify-between">
+        <span>الجزيئات المتلألئة</span>
+        <div id="pSw" class="sw on" role="switch" aria-checked="true" tabindex="0"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- نافذة الواقع المعزز -->
+<div id="arModal" class="fixed inset-0 z-50 hidden flex-col" style="background:radial-gradient(ellipse at 50% 30%,#1a2f6e,#050a1c)">
+  <div class="flex items-center justify-between p-4" style="padding-top:max(1rem,env(safe-area-inset-top))">
+    <h2 class="names text-2xl">الدعوة في أوضتك</h2>
+    <button id="arClose" class="glass rounded-full w-10 h-10 text-xl" aria-label="إغلاق">✕</button>
+  </div>
+  <div class="relative flex-1 min-h-0">
+    <div id="arLoading" class="absolute inset-0 flex items-center justify-center text-[#f5e0a0]">بنجهّز المجسم…</div>
+    <model-viewer id="mv" camera-controls auto-rotate shadow-intensity="1" exposure="1.1" environment-image="neutral"
+      ar ar-modes="webxr scene-viewer quick-look" ar-placement="floor" ar-scale="auto" alt="خاتمان ذهبيان وعروسان"></model-viewer>
+  </div>
+  <div class="p-4 space-y-3" style="padding-bottom:max(1rem,env(safe-area-inset-bottom))">
+    <div class="glass rounded-2xl p-3 text-sm leading-7 text-center">
+      <p class="font-semibold text-[#f5e0a0]">ازاي تشوفنا قدامك؟</p>
+      <p>١) اضغط الزر تحت وسمح للكاميرا.&nbsp; ٢) وجّه الموبايل على الترابيزة وحرّكه شوية لحد ما يلقط السطح.&nbsp; ٣) هتلاقينا واقفين قدامك، قرّب وكبّر بإيدك وصوّر لحظة حلوة.</p>
+    </div>
+    <button id="arStart" class="btn-gold w-full rounded-full py-3 text-base">افتح الكاميرا وحطنا على الترابيزة</button>
+    <p id="arNote" class="text-center text-xs text-[#f5e0a0]/80 hidden"></p>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/exporters/GLTFExporter.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const S = {speed:1, size:1, light:1.2, particles:true};
+
+/* ---------- كلام حلو للضيوف + العد التنازلي ---------- */
+const wishes = [
+  "نورتوا فرحتنا، ووجودكم أحلى هدية",
+  "حطّوا الموبايل على الترابيزة وشوفونا قدامكم",
+  "ربنا يسعدكم زي ما أسعدتونا بحضوركم",
+  "دعواتكم لينا بالستر والمحبة والبركة",
+  "ليلة العمر مش هتكمل غير بيكم",
+  "خاتمين جوا بعض… قلبين على قلب واحد"
+];
+let wi = 0; const wEl = $('wish');
+function nextWish(){ wEl.style.opacity = 0; setTimeout(()=>{ wEl.textContent = wishes[wi++ % wishes.length]; wEl.style.opacity = 1; }, 600); }
+nextWish(); setInterval(nextWish, 5000);
+
+(function countdown(){
+  const d = Math.ceil((new Date('2026-10-20T00:00:00') - new Date()) / 864e5);
+  $('count').textContent = d > 1 ? `فاضل ${d} أيام` : d === 1 ? 'فاضل يوم واحد' : d === 0 ? 'النهارده الفرح!' : 'ألف مبروك';
+})();
+
+/* ---------- بناء المجسمات ---------- */
+const goldMat = () => new THREE.MeshStandardMaterial({color:0xd4af37, metalness:1, roughness:.22});
+
+function makeRings(){
+  const g = new THREE.Group();
+  const r1 = new THREE.Mesh(new THREE.TorusGeometry(1, .17, 48, 120), goldMat());
+  r1.position.x = -.5;
+  const r2 = new THREE.Mesh(new THREE.TorusGeometry(1, .17, 48, 120), goldMat());
+  r2.position.x = .5; r2.rotation.x = Math.PI / 2;
+  const gem = new THREE.Mesh(new THREE.OctahedronGeometry(.2, 0),
+    new THREE.MeshStandardMaterial({color:0xe8f4ff, metalness:.2, roughness:.05, emissive:0x6fa8ff, emissiveIntensity:.35}));
+  gem.scale.y = 1.4; gem.position.set(-.5, 1.22, 0);
+  g.add(r1, r2, gem);
+  return g;
+}
+
+function makeCouple(){
+  const g = new THREE.Group();
+  const std = (c, m = 0, r = .6) => new THREE.MeshStandardMaterial({color:c, metalness:m, roughness:r});
+  const skin = std(0xf1c9a5);
+  // العروسة
+  const bride = new THREE.Group();
+  const dress = new THREE.Mesh(new THREE.ConeGeometry(.55, 1.3, 32), std(0xfffaf0, 0, .4)); dress.position.y = .65;
+  const top = new THREE.Mesh(new THREE.CylinderGeometry(.17, .25, .45, 24), std(0xfffaf0, 0, .4)); top.position.y = 1.45;
+  const head = new THREE.Mesh(new THREE.SphereGeometry(.2, 24, 24), skin); head.position.y = 1.85;
+  const hair = new THREE.Mesh(new THREE.SphereGeometry(.22, 24, 24, 0, Math.PI * 2, 0, Math.PI / 1.7), std(0x2a1a10)); hair.position.y = 1.88;
+  const veil = new THREE.Mesh(new THREE.ConeGeometry(.4, 1.1, 24, 1, true), new THREE.MeshStandardMaterial({color:0xffffff, transparent:true, opacity:.35, side:THREE.DoubleSide}));
+  veil.position.set(0, 1.4, -.12);
+  bride.add(dress, top, head, hair, veil); bride.position.x = 1.15;
+  // العريس
+  const groom = new THREE.Group();
+  const legs = new THREE.Mesh(new THREE.CylinderGeometry(.22, .25, .8, 24), std(0x0a1330, 0, .5)); legs.position.y = .4;
+  const body = new THREE.Mesh(new THREE.CylinderGeometry(.3, .26, .85, 24), std(0x142456, 0, .5)); body.position.y = 1.2;
+  const gHead = new THREE.Mesh(new THREE.SphereGeometry(.2, 24, 24), skin); gHead.position.y = 1.85;
+  const gHair = new THREE.Mesh(new THREE.SphereGeometry(.21, 24, 24, 0, Math.PI * 2, 0, Math.PI / 2), std(0x1a1008)); gHair.position.y = 1.89;
+  const bow = new THREE.Mesh(new THREE.BoxGeometry(.22, .1, .06), goldMat()); bow.position.set(0, 1.55, .26);
+  groom.add(legs, body, gHead, gHair, bow); groom.position.x = -1.15;
+  g.add(bride, groom);
+  return g;
+}
+
+function buildARModel(){
+  const root = new THREE.Group();
+  const base = new THREE.Mesh(new THREE.CylinderGeometry(2, 2.1, .12, 64), new THREE.MeshStandardMaterial({color:0x142456, metalness:.6, roughness:.35}));
+  base.position.y = .06;
+  const edge = new THREE.Mesh(new THREE.TorusGeometry(2.05, .04, 12, 96), goldMat());
+  edge.rotation.x = Math.PI / 2; edge.position.y = .12;
+  const couple = makeCouple(); couple.position.y = .12;
+  const rings = makeRings(); rings.scale.setScalar(.55); rings.position.set(0, 2.9, 0);
+  root.add(base, edge, couple, rings);
+  root.scale.setScalar(.12); // حوالي ٢٥ سم عرض على الترابيزة
+  const wrap = new THREE.Group(); wrap.add(root);
+  return wrap;
+}
+
+/* ---------- المشهد الرئيسي ---------- */
+const stage = $('stage');
+const renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.1;
+stage.appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(45, 1, .1, 100); camera.position.set(0, .4, 5.2);
+const controls = new THREE.OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true; controls.enablePan = false; controls.minDistance = 2.5; controls.maxDistance = 9;
+
+// خريطة انعكاس مرسومة لإظهار لمعة الذهب
+(function env(){
+  const c = document.createElement('canvas'); c.width = 512; c.height = 256;
+  const x = c.getContext('2d'), gr = x.createLinearGradient(0, 0, 0, 256);
+  gr.addColorStop(0, '#2a3f8f'); gr.addColorStop(.5, '#0a1330'); gr.addColorStop(1, '#3a2c0a');
+  x.fillStyle = gr; x.fillRect(0, 0, 512, 256);
+  x.fillStyle = '#fff'; [[60,50,70,30],[220,40,110,22],[400,70,60,40],[150,150,40,20]].forEach(r => x.fillRect(...r));
+  x.fillStyle = '#ffd98a'; x.fillRect(330, 110, 120, 14);
+  const t = new THREE.CanvasTexture(c); t.mapping = THREE.EquirectangularReflectionMapping;
+  const pm = new THREE.PMREMGenerator(renderer);
+  scene.environment = pm.fromEquirectangular(t).texture; t.dispose(); pm.dispose();
+})();
+
+const lights = [
+  new THREE.AmbientLight(0xffffff, .35),
+  Object.assign(new THREE.DirectionalLight(0xfff0c8, 1.4), {position:new THREE.Vector3(3, 4, 5)}),
+  Object.assign(new THREE.PointLight(0x6fa8ff, 1.2, 20), {position:new THREE.Vector3(-4, 1, 3)}),
+  Object.assign(new THREE.PointLight(0xd4af37, 1.5, 20), {position:new THREE.Vector3(3, -2, -3)})
+];
+const base = lights.map(l => l.intensity);
+lights.forEach(l => scene.add(l));
+
+const rings = makeRings(); scene.add(rings);
+
+// الجزيئات
+const N = 600, pos = new Float32Array(N * 3), vel = [];
+for (let i = 0; i < N; i++){
+  const r = 1.8 + Math.random() * 3, a = Math.random() * 6.283, h = (Math.random() - .5) * 4;
+  pos.set([Math.cos(a) * r, h, Math.sin(a) * r], i * 3); vel.push(.1 + Math.random() * .4);
+}
+const pg = new THREE.BufferGeometry(); pg.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+const sc = document.createElement('canvas'); sc.width = sc.height = 64;
+const sx = sc.getContext('2d'), sg = sx.createRadialGradient(32, 32, 0, 32, 32, 32);
+sg.addColorStop(0, '#fff'); sg.addColorStop(.25, '#ffe9a0'); sg.addColorStop(1, 'rgba(212,175,55,0)');
+sx.fillStyle = sg; sx.fillRect(0, 0, 64, 64);
+const pm = new THREE.PointsMaterial({size:.09, map:new THREE.CanvasTexture(sc), transparent:true, depthWrite:false, blending:THREE.AdditiveBlending});
+const points = new THREE.Points(pg, pm); scene.add(points);
+
+function resize(){ const w = innerWidth, h = innerHeight; renderer.setSize(w, h); camera.aspect = w / h; camera.position.z = Math.max(camera.position.z, 0); camera.fov = w < h ? 60 : 45; camera.updateProjectionMatrix(); }
+addEventListener('resize', resize); resize();
+
+const clock = new THREE.Clock();
+renderer.setAnimationLoop(() => {
+  const dt = clock.getDelta(), t = clock.elapsedTime;
+  rings.rotation.y += dt * .6 * S.speed;
+  rings.rotation.x = Math.sin(t * .5) * .25;
+  rings.position.y = Math.sin(t) * .08;
+  rings.scale.setScalar(S.size);
+  if (S.particles){
+    const p = pg.attributes.position.array;
+    for (let i = 0; i < N; i++){ p[i * 3 + 1] += vel[i] * dt * .5; if (p[i * 3 + 1] > 2.2) p[i * 3 + 1] = -2.2; }
+    pg.attributes.position.needsUpdate = true;
+    points.rotation.y += dt * .08 * Math.max(S.speed, .2);
+    pm.opacity = .65 + Math.sin(t * 3) * .3;
+  }
+  points.visible = S.particles;
+  controls.update(); renderer.render(scene, camera);
+});
+
+/* ---------- لوحة التحكم ---------- */
+$('speed').oninput = e => S.speed = +e.target.value;
+$('size').oninput = e => S.size = +e.target.value;
+$('light').oninput = e => { S.light = +e.target.value; lights.forEach((l, i) => l.intensity = base[i] * S.light / 1.2); renderer.toneMappingExposure = .7 + S.light * .3; };
+const sw = $('pSw'), flip = () => { S.particles = !S.particles; sw.classList.toggle('on', S.particles); sw.setAttribute('aria-checked', S.particles); };
+sw.onclick = flip; sw.onkeydown = e => { if (e.key === ' ' || e.key === 'Enter'){ e.preventDefault(); flip(); } };
+$('togglePanel').onclick = e => { const p = $('panel'), h = p.style.display === 'none'; p.style.display = h ? '' : 'none'; e.target.textContent = h ? 'إخفاء التحكم' : 'إظهار التحكم'; e.target.setAttribute('aria-expanded', h); wEl.style.bottom = `calc(env(safe-area-inset-bottom) + ${h ? 215 : 90}px)`; };
+
+/* ---------- الواقع المعزز ---------- */
+const mv = $('mv'); let glbUrl = null, building = null;
+function makeGLB(){
+  if (building) return building;
+  return building = new Promise((res, rej) => {
+    try {
+      new THREE.GLTFExporter().parse(buildARModel(), buf => {
+        glbUrl = URL.createObjectURL(new Blob([buf], {type:'model/gltf-binary'})); res(glbUrl);
+      }, {binary:true});
+    } catch (err){ rej(err); }
+  });
+}
+function note(msg){ const n = $('arNote'); n.textContent = msg; n.classList.remove('hidden'); }
+
+$('arBtn').onclick = async () => {
+  $('arModal').classList.remove('hidden'); $('arModal').classList.add('flex');
+  try {
+    mv.src = await makeGLB();
+    mv.addEventListener('load', () => $('arLoading').remove(), {once:true});
+  } catch (err){ $('arLoading').textContent = 'حصلت مشكلة في تجهيز المجسم، جرّب تحدّث الصفحة.'; }
+};
+$('arClose').onclick = () => { $('arModal').classList.add('hidden'); $('arModal').classList.remove('flex'); };
+$('arStart').onclick = () => {
+  if (mv.canActivateAR) mv.activateAR();
+  else note('جهازك مش بيدعم الواقع المعزز من المتصفح. افتح الرابط من موبايل حديث (كروم أندرويد أو سفاري آيفون) والصفحة لازم تكون على رابط https.');
+};
+</script>
+</body>
+</html>
